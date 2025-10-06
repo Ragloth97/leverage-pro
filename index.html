@@ -1,234 +1,609 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ Leverage Pro - Kripto Kaldıraç Ustası</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #e2e8f0;
-            padding: 20px;
-            min-height: 100vh;
-        }
-        .container { max-width: 1400px; margin: 0 auto; }
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 30px;
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 16px;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-        }
-        .header h1 {
-            font-size: 2.5em;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-        .loading {
-            text-align: center;
-            padding: 50px;
-            font-size: 1.5em;
-            color: #3b82f6;
-        }
-        .analyze-btn {
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            margin: 20px auto;
-            display: block;
-        }
-        .analyze-btn:hover { transform: scale(1.05); }
-        .market-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-        .summary-card {
-            background: rgba(30, 41, 59, 0.6);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-        .summary-card .label { color: #94a3b8; font-size: 0.85em; margin-bottom: 8px; }
-        .summary-card .value { font-size: 1.5em; font-weight: bold; color: #3b82f6; }
-        .opp-card {
-            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-        .rank-badge {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        .badge {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            margin-right: 10px;
-            display: inline-block;
-        }
-        .badge-long { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid #10b981; }
-        .badge-short { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; }
-        .trade-btn {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 15px;
-        }
-        .trade-btn:hover { transform: scale(1.02); }
-        .positions-panel {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 40px;
-        }
-        .position-card {
-            background: rgba(15, 23, 42, 0.6);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-        }
-        .close-btn {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-        .positive { color: #10b981; font-weight: bold; }
-        .negative { color: #ef4444; font-weight: bold; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>⚡ Leverage Pro - Kripto Kaldıraç Ustası</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-primary: #0b0e11;
+      --bg-elevated: #111418;
+      --bg-panel: #0e1116;
+      --bg-hover: #141a1f;
+      --text-primary: #eaecef;
+      --text-secondary: #9b9ea3;
+      --accent: #f0b90b; /* Binance gold */
+      --green: #16c784;
+      --red: #ea3943;
+      --border: #1f2937;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      padding: 16px;
+      min-height: 100vh;
+    }
+    .container { max-width: 1440px; margin: 0 auto; }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      padding: 14px 18px;
+      background: linear-gradient(180deg, rgba(17,20,24,0.9) 0%, rgba(14,17,22,0.9) 100%);
+      border: 1px solid #1a222d;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand .logo {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: radial-gradient(circle at 30% 30%, #fff2 0 40%, transparent 41%), linear-gradient(135deg, #ffde59 0%, #f0b90b 60%, #b58f00 100%);
+      box-shadow: 0 0 20px rgba(240,185,11,0.3);
+    }
+    .brand h1 {
+      font-size: 1.25rem; font-weight: 800; letter-spacing: 0.4px;
+      background: linear-gradient(90deg, #fff 0%, #f0e4b2 40%, #f0b90b 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .analyze-btn {
+      background: linear-gradient(135deg, var(--accent) 0%, #e1ad08 100%);
+      color: #111;
+      border: none;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .analyze-btn:hover { filter: brightness(1.05); }
+    .search-input {
+      background: var(--bg-panel);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      min-width: 220px;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    /* Top summary */
+    .market-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .summary-card {
+      background: var(--bg-elevated);
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid #1a222d;
+      box-shadow: var(--shadow);
+    }
+    .summary-card .label { color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 8px; }
+    .summary-card .value { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+
+    /* Main layout */
+    .layout { display: grid; grid-template-columns: 1fr 340px; gap: 16px; }
+    @media (max-width: 1024px) { .layout { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--bg-elevated); border: 1px solid #1a222d; border-radius: var(--radius-lg); box-shadow: var(--shadow); }
+    .panel-header { display:flex; align-items:center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #1a222d; }
+    .panel-title { font-weight: 700; color: var(--text-primary); }
+
+    .controls {
+      display:flex; flex-wrap: wrap; gap: 10px; padding: 12px 16px;
+      border-bottom: 1px solid #1a222d; background: var(--bg-panel);
+      border-top-left-radius: var(--radius-lg); border-top-right-radius: var(--radius-lg);
+    }
+    .select, .range, .control-input {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Signals table */
+    .table-wrap { overflow:auto; max-height: 60vh; }
+    .signals-table { width: 100%; border-collapse: collapse; }
+    .signals-table thead th {
+      position: sticky; top: 0; z-index: 2;
+      text-align: left; font-size: 0.8rem; letter-spacing: 0.4px; color: var(--text-secondary);
+      background: var(--bg-panel); border-bottom: 1px solid #1a222d; padding: 10px 12px; cursor: pointer;
+    }
+    .signals-table tbody td { padding: 12px; border-bottom: 1px solid #141a20; font-size: 0.95rem; }
+    .signals-table tbody tr:hover { background: var(--bg-hover); }
+    .chip { padding: 4px 10px; border-radius: 999px; font-weight: 700; font-size: 0.75rem; border: 1px solid transparent; }
+    .chip-long { color: var(--green); background: rgba(22,199,132,0.1); border-color: rgba(22,199,132,0.25); }
+    .chip-short { color: var(--red); background: rgba(234,57,67,0.08); border-color: rgba(234,57,67,0.25); }
+    .price-up { color: var(--green); }
+    .price-down { color: var(--red); }
+    .btn-sm { padding: 8px 10px; border-radius: 8px; border: 1px solid #1a222d; background: #161a22; color: var(--text-primary); cursor: pointer; }
+    .btn-sm:hover { filter: brightness(1.05); }
+
+    /* Positions */
+    .positions-panel { background: var(--bg-elevated); border: 1px solid #1a222d; border-radius: var(--radius-lg); padding: 0; }
+    .position-card { background: var(--bg-panel); padding: 12px; border-radius: 10px; margin: 12px 16px; border: 1px solid #1a222d; }
+    .close-btn { background: var(--red); color: #fff; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
+    .positive { color: var(--green); font-weight: bold; }
+    .negative { color: var(--red); font-weight: bold; }
+
+    /* Modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; }
+    .modal { width: min(680px, 92vw); background: var(--bg-elevated); border: 1px solid #1a222d; border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+    .modal-header { display:flex; align-items:center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #1a222d; }
+    .modal-body { padding: 16px; }
+    .modal-footer { padding: 12px 16px; display:flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #1a222d; }
+    .hidden { display: none; }
+    .sparkline { width: 100%; height: 80px; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>⚡ Leverage Pro</h1>
-            <p style="color: #94a3b8;">Kripto Kaldıraç Ustası</p>
-            <button class="analyze-btn" onclick="loadAnalysis()">🔄 Yeni Analiz Yap</button>
-        </div>
-        <div id="app">
-            <div class="loading">📊 Analiz yükleniyor...</div>
-        </div>
+  <div class="container">
+    <div class="header">
+      <div class="brand">
+        <div class="logo"></div>
+        <h1>Leverage Pro</h1>
+      </div>
+      <div class="header-actions">
+        <input id="search" class="search-input" placeholder="Sembol ara... (örn. BTC)" />
+        <button class="analyze-btn" onclick="loadAnalysis()">🔄 Yeni Analiz</button>
+      </div>
     </div>
 
-    <script>
-        const API = 'https://runtime.codewords.ai/run/leverage_pro_crypto_analyzer_f1373fca/json';
-        let positions = JSON.parse(localStorage.getItem('lp_pos') || '[]');
+    <div id="app">
+      <div class="loading">📊 Analiz yükleniyor...</div>
+    </div>
+  </div>
 
-        async function loadAnalysis() {
-            document.getElementById('app').innerHTML = '<div class="loading">⏳ AI analiz yapıyor... (30-40 saniye)</div>';
-            try {
-                const res = await fetch(API, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({top_n: 10, min_volume: 1000000})
-                });
-                const data = await res.json();
-                renderUI(data);
-            } catch (e) {
-                document.getElementById('app').innerHTML = '<div class="loading">❌ Hata: ' + e.message + '</div>';
-            }
+  <!-- Coin Detail Modal -->
+  <div id="coin-backdrop" class="modal-backdrop" onclick="closeModal('coin')"></div>
+  <div id="coin-modal" class="modal hidden">
+    <div class="modal-header">
+      <div class="panel-title">Coin Detayı</div>
+      <button class="btn-sm" onclick="closeModal('coin')">Kapat</button>
+    </div>
+    <div id="coin-body" class="modal-body"></div>
+  </div>
+
+  <!-- Trade Modal -->
+  <div id="trade-backdrop" class="modal-backdrop" onclick="closeModal('trade')"></div>
+  <div id="trade-modal" class="modal hidden">
+    <div class="modal-header">
+      <div class="panel-title">Mock Trade Aç</div>
+      <button class="btn-sm" onclick="closeModal('trade')">Kapat</button>
+    </div>
+    <div id="trade-body" class="modal-body"></div>
+    <div class="modal-footer">
+      <button id="trade-confirm" class="analyze-btn">Onayla</button>
+    </div>
+  </div>
+
+  <script>
+    const API = 'https://runtime.codewords.ai/run/leverage_pro_crypto_analyzer_f1373fca/json';
+    const BINANCE_WS_ALL_MINI = 'wss://stream.binance.com:9443/ws/!miniTicker@arr';
+    const BINANCE_REST_24H = 'https://api.binance.com/api/v3/ticker/24hr?symbol=';
+    const BINANCE_REST_PRICE = 'https://api.binance.com/api/v3/ticker/price?symbol=';
+    const BINANCE_REST_KLINES = 'https://api.binance.com/api/v3/klines?interval=1m&limit=60&symbol=';
+
+    const state = {
+      signals: [],
+      filteredSignals: [],
+      latestByPair: {},
+      prevPriceByPair: {},
+      neededPairs: new Set(),
+      ws: null,
+      sort: { key: 'confidence_score', dir: 'desc' }
+    };
+
+    let positions = JSON.parse(localStorage.getItem('lp_pos') || '[]');
+
+    function normalizeToUSDTPair(sym) {
+      if (!sym) return null;
+      const u = String(sym).toUpperCase();
+      if (u.endsWith('USDT')) return u;
+      return u + 'USDT';
+    }
+
+    async function loadAnalysis() {
+      document.getElementById('app').innerHTML = '<div class="loading">⏳ AI analiz yapıyor... (30-40 saniye)</div>';
+      try {
+        const res = await fetch(API, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ top_n: 20, min_volume: 1000000 }) });
+        const data = await res.json();
+        bootstrapUI(data);
+      } catch (e) {
+        document.getElementById('app').innerHTML = '<div class="loading">❌ Hata: ' + e.message + '</div>';
+      }
+    }
+
+    function bootstrapUI(d) {
+      state.signals = Array.isArray(d?.top_opportunities) ? d.top_opportunities : [];
+      state.filteredSignals = [...state.signals];
+      state.neededPairs = new Set(state.signals.map(o => normalizeToUSDTPair(o.symbol)));
+
+      const html = `
+        <div class="market-summary">
+          <div class="summary-card"><div class="label">💰 Market Cap</div><div class="value">$${(d.global_market_cap/1e12).toFixed(2)}T</div></div>
+          <div class="summary-card"><div class="label">📈 24h Hacim</div><div class="value">$${(d.total_volume_24h/1e9).toFixed(1)}B</div></div>
+          <div class="summary-card"><div class="label">🥇 BTC Dom</div><div class="value">${d.btc_dominance.toFixed(2)}%</div></div>
+        </div>
+        <div class="layout">
+          <main class="panel">
+            <div class="controls">
+              <select id="dirFilter" class="select">
+                <option value="all">Yön: Hepsi</option>
+                <option value="Long">Long</option>
+                <option value="Short">Short</option>
+              </select>
+              <label style="display:flex; align-items:center; gap:8px; color:var(--text-secondary);">
+                Güven ≥ <span id="confVal">60</span>
+                <input id="confMin" class="range" type="range" min="0" max="100" step="5" value="60"/>
+              </label>
+              <select id="levFilter" class="select">
+                <option value="all">Kaldıraç: Hepsi</option>
+                <option value="5">≥ 5x</option>
+                <option value="10">≥ 10x</option>
+                <option value="20">≥ 20x</option>
+              </select>
+            </div>
+            <div class="table-wrap">
+              <table class="signals-table">
+                <thead>
+                  <tr>
+                    <th onclick="sortBy('rank')">Sıra</th>
+                    <th onclick="sortBy('symbol')">Sembol</th>
+                    <th onclick="sortBy('current_price')">Fiyat</th>
+                    <th onclick="sortBy('direction')">Yön</th>
+                    <th onclick="sortBy('leverage')">Kaldıraç</th>
+                    <th onclick="sortBy('confidence_score')">Güven</th>
+                    <th>İşlem</th>
+                  </tr>
+                </thead>
+                <tbody id="signals-body"></tbody>
+              </table>
+            </div>
+          </main>
+          <aside class="positions-panel">
+            <div class="panel-header">
+              <div class="panel-title">💼 Mock Portföy</div>
+              <button class="btn-sm" onclick="clearClosed()">Temizle</button>
+            </div>
+            <div id="positions" style="padding-bottom: 8px;"></div>
+          </aside>
+        </div>
+      `;
+      document.getElementById('app').innerHTML = html;
+
+      const q = (id) => document.getElementById(id);
+      q('dirFilter').addEventListener('change', applyFilters);
+      q('levFilter').addEventListener('change', applyFilters);
+      q('confMin').addEventListener('input', () => { q('confVal').innerText = q('confMin').value; applyFilters(); });
+      const searchEl = document.getElementById('search');
+      if (searchEl) searchEl.addEventListener('input', applyFilters);
+
+      applyFilters();
+      renderPositions();
+      connectPriceStream();
+    }
+
+    function sortBy(key) {
+      const dir = (state.sort.key === key && state.sort.dir === 'desc') ? 'asc' : 'desc';
+      state.sort = { key, dir };
+      renderSignalsTable();
+    }
+
+    function applyFilters() {
+      const dir = document.getElementById('dirFilter').value;
+      const lev = document.getElementById('levFilter').value;
+      const conf = parseInt(document.getElementById('confMin').value, 10);
+      const search = (document.getElementById('search')?.value || '').trim().toUpperCase();
+
+      state.filteredSignals = state.signals.filter(o => {
+        const passDir = dir === 'all' || o.direction === dir;
+        const levNum = parseInt(String(o.leverage).replace(/[^0-9]/g,'')) || 1;
+        const passLev = lev === 'all' || levNum >= parseInt(lev,10);
+        const passConf = (parseInt(o.confidence_score,10) || 0) >= conf;
+        const passSearch = !search || String(o.symbol).toUpperCase().includes(search) || String(o.name).toUpperCase().includes(search);
+        return passDir && passLev && passConf && passSearch;
+      });
+      renderSignalsTable();
+    }
+
+    function renderSignalsTable() {
+      const tbody = document.getElementById('signals-body');
+      if (!tbody) return;
+      const arr = [...state.filteredSignals];
+      const { key, dir } = state.sort;
+      arr.sort((a,b) => {
+        const av = (key === 'leverage') ? (parseInt(String(a.leverage).replace(/[^0-9]/g,''))||0) : (a[key] ?? 0);
+        const bv = (key === 'leverage') ? (parseInt(String(b.leverage).replace(/[^0-9]/g,''))||0) : (b[key] ?? 0);
+        if (typeof av === 'string') return dir==='asc' ? av.localeCompare(bv) : bv.localeCompare(av);
+        return dir==='asc' ? av - bv : bv - av;
+      });
+
+      const rows = arr.map(o => {
+        const pair = normalizeToUSDTPair(o.symbol);
+        const last = state.latestByPair[pair] ?? o.current_price;
+        const prev = state.prevPriceByPair[pair] ?? last;
+        const cls = last >= prev ? 'price-up' : 'price-down';
+        const payload = {
+          symbol: o.symbol,
+          name: o.name,
+          direction: o.direction,
+          leverage: o.leverage,
+          entry_price: o.entry_price,
+          take_profit: o.take_profit,
+          stop_loss: o.stop_loss,
+          current_price: o.current_price
+        };
+        const encoded = encodeURIComponent(JSON.stringify(payload));
+        return `
+          <tr data-pair="${pair}">
+            <td>#${o.rank}</td>
+            <td><strong>${o.symbol}</strong> <span style="color:var(--text-secondary)">(${o.name})</span></td>
+            <td class="${cls}">$<span data-price="${pair}">${Number(last).toFixed(4)}</span></td>
+            <td><span class="chip ${o.direction==='Long'?'chip-long':'chip-short'}">${o.direction}</span></td>
+            <td>${o.leverage}</td>
+            <td>${o.confidence_score}</td>
+            <td style="display:flex; gap:8px;">
+              <button class="btn-sm" onclick="openCoinModal('${pair}','${o.name}','${o.symbol}')">Detay</button>
+              <button class="btn-sm" onclick="openTradeModal(JSON.parse(decodeURIComponent('${encoded}')))">Aç</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      tbody.innerHTML = rows || '<tr><td colspan="7" style="color:var(--text-secondary); padding:12px;">Kriterlere uygun sinyal yok.</td></tr>';
+    }
+
+    function connectPriceStream() {
+      try { if (state.ws) { state.ws.close(); } } catch(_){}
+      try {
+        state.ws = new WebSocket(BINANCE_WS_ALL_MINI);
+        state.ws.onmessage = (ev) => {
+          let payload;
+          try { payload = JSON.parse(ev.data); } catch(_) { return; }
+          let arr = [];
+          if (Array.isArray(payload)) arr = payload; // legacy format
+          else if (Array.isArray(payload?.data)) arr = payload.data; // combined stream format
+          else if (payload?.e === '24hrMiniTicker') arr = [payload]; // single
+          if (!arr.length) return;
+          const needed = state.neededPairs;
+          for (const t of arr) {
+            const s = t.s; // symbol
+            if (!needed.has(s)) continue;
+            const price = parseFloat(t.c);
+            const prev = state.latestByPair[s] ?? price;
+            state.prevPriceByPair[s] = prev;
+            state.latestByPair[s] = price;
+          }
+          updatePricesInDOM();
+          updateLivePnLInDOM();
+        };
+        state.ws.onerror = () => { startPolling(); };
+        state.ws.onclose = () => { setTimeout(connectPriceStream, 4000); };
+      } catch (_) {
+        startPolling();
+      }
+    }
+
+    let pollTimer = null;
+    function startPolling() {
+      if (pollTimer) return;
+      const pairs = Array.from(state.neededPairs);
+      if (!pairs.length) return;
+      pollTimer = setInterval(async () => {
+        try {
+          for (const p of pairs) {
+            const r = await fetch(BINANCE_REST_PRICE + p);
+            if (!r.ok) continue; const j = await r.json();
+            const price = parseFloat(j.price);
+            const prev = state.latestByPair[p] ?? price;
+            state.prevPriceByPair[p] = prev;
+            state.latestByPair[p] = price;
+          }
+          updatePricesInDOM();
+          updateLivePnLInDOM();
+        } catch (_) {}
+      }, 5000);
+    }
+
+    function updatePricesInDOM() {
+      const priceEls = document.querySelectorAll('[data-price]');
+      priceEls.forEach(el => {
+        const pair = el.getAttribute('data-price');
+        const latest = state.latestByPair[pair];
+        if (typeof latest === 'number') {
+          const prev = state.prevPriceByPair[pair] ?? latest;
+          el.textContent = latest.toFixed(4);
+          const td = el.closest('td');
+          if (td) td.className = latest >= prev ? 'price-up' : 'price-down';
         }
+      });
+    }
 
-        function renderUI(d) {
-            let h = `
-                <div class="market-summary">
-                    <div class="summary-card"><div class="label">💰 Market Cap</div><div class="value">$${(d.global_market_cap/1e12).toFixed(2)}T</div></div>
-                    <div class="summary-card"><div class="label">📈 24h Hacim</div><div class="value">$${(d.total_volume_24h/1e9).toFixed(1)}B</div></div>
-                    <div class="summary-card"><div class="label">🥇 BTC Dom</div><div class="value">${d.btc_dominance.toFixed(2)}%</div></div>
-                </div>
-                <div class="positions-panel"><h3 style="color:#fff">💼 Mock Portföy</h3><div id="positions"></div></div>
-                <h2 style="color:#fff; margin-bottom:20px">🎯 Top ${d.top_opportunities.length} Fırsat</h2>
-            `;
-            d.top_opportunities.forEach(o => {
-                const dc = o.direction === 'Long' ? 'badge-long' : 'badge-short';
-                h += `<div class="opp-card">
-                    <div class="rank-badge">#${o.rank}</div>
-                    <h3 style="color:#fff">${o.name} (${o.symbol})</h3>
-                    <div><span class="badge ${dc}">${o.direction}</span><span class="badge">${o.leverage}</span></div>
-                    <p style="margin:10px 0">💯 Güven: ${o.confidence_score}/100 | 💰 Fiyat: $${o.current_price.toFixed(4)}</p>
-                    <p>🎯 TP: $${o.take_profit.toFixed(4)} (+${o.potential_profit_pct.toFixed(1)}%) | 🛑 SL: $${o.stop_loss.toFixed(4)} (-${o.potential_loss_pct.toFixed(1)}%)</p>
-                    <p style="margin-top:10px; color:#cbd5e1; font-size:0.9em">💡 ${o.reason}</p>
-                    <button class="trade-btn" onclick='openPos(${JSON.stringify(o)})'>💰 Mock Trade Aç</button>
+    function renderPositions() {
+      const container = document.getElementById('positions');
+      const open = positions.filter(p => p.status === 'open');
+      const closed = positions.filter(p => p.status === 'closed').slice(-5);
+      let h = `<p style="color:var(--text-secondary); margin: 12px 16px;">Aktif: ${open.length}</p>`;
+      for (const p of open) {
+        const pair = p.pair || normalizeToUSDTPair(p.symbol);
+        const latest = state.latestByPair[pair] ?? p.entryPrice;
+        const lev = parseInt(String(p.leverage).replace(/[^0-9]/g,'')) || 1;
+        const chg = p.direction === 'Long' ? (latest - p.entryPrice) / p.entryPrice : (p.entryPrice - latest) / p.entryPrice;
+        const pnl = p.amount * chg * lev;
+        const cls = pnl >= 0 ? 'positive' : 'negative';
+        h += `
+          <div class="position-card" data-pos="${p.id}">
+            <div style="display:flex; justify-content:space-between; gap:8px; align-items:center;">
+              <div>
+                <div style="font-weight:700;">${p.name} <span style="color:var(--text-secondary)">(${p.symbol})</span></div>
+                <div style="color:var(--text-secondary); font-size:0.85rem;">${p.direction} · ${p.leverage} · Giriş: $${p.entryPrice.toFixed(4)}</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="${cls}">$${pnl.toFixed(2)}</div>
+                <button class="close-btn" onclick="closePos(${p.id})">Kapat</button>
+              </div>
+            </div>
+          </div>`;
+      }
+      if (closed.length > 0) {
+        h += '<p style="color:var(--text-secondary); margin:8px 16px 4px;">Son Kapatılan:</p>';
+        for (const p of closed) {
+          h += `<div style="display:flex; justify-content:space-between; opacity:0.9; font-size:0.9rem; margin: 4px 16px;">
+                  <span>${p.symbol}</span><span class="${p.pnl > 0 ? 'positive' : 'negative'}">${p.pnl > 0 ? '+' : ''}$${p.pnl.toFixed(2)}</span>
                 </div>`;
-            });
-            document.getElementById('app').innerHTML = h;
-            renderPos();
         }
+      }
+      container.innerHTML = h || '<p style="color:var(--text-secondary); margin: 12px 16px;">Pozisyon yok.</p>';
+    }
 
-        function openPos(o) {
-            positions.push({id:Date.now(), symbol:o.symbol, name:o.name, direction:o.direction, 
-                leverage:o.leverage, entryPrice:o.entry_price, takeProfit:o.take_profit, 
-                stopLoss:o.stop_loss, amount:100, status:'open'});
-            localStorage.setItem('lp_pos', JSON.stringify(positions));
-            renderPos();
-            alert(`✅ ${o.symbol} ${o.direction} açıldı!`);
-        }
+    function updateLivePnLInDOM() { renderPositions(); }
 
-        function closePos(id, price) {
-            const p = positions.find(x => x.id === id);
-            const lev = parseInt(p.leverage);
-            const chg = p.direction === 'Long' ? (price - p.entryPrice) / p.entryPrice : (p.entryPrice - price) / p.entryPrice;
-            const pnl = p.amount * chg * lev;
-            p.status = 'closed';
-            p.pnl = pnl;
-            localStorage.setItem('lp_pos', JSON.stringify(positions));
-            renderPos();
-            alert(`${pnl > 0 ? '🎉' : '😔'} P&L: ${pnl > 0 ? '+' : ''}$${pnl.toFixed(2)}`);
-        }
+    function openTradeModal(o) {
+      const pair = normalizeToUSDTPair(o.symbol);
+      const latest = state.latestByPair[pair] ?? (o.current_price || o.entry_price);
+      const body = document.getElementById('trade-body');
+      const levNum = parseInt(String(o.leverage).replace(/[^0-9]/g,'')) || 5;
+      body.innerHTML = `
+        <div style="display:grid; gap:10px;">
+          <div style="display:flex; justify-content:space-between;"> <div><strong>${o.name}</strong> <span style=\"color:var(--text-secondary)\">(${o.symbol})</span></div> <div>Fiyat: $${Number(latest).toFixed(4)}</div></div>
+          <label>Miktar ($)
+            <input id="trade-amount" class="control-input" type="number" min="10" step="10" value="100" />
+          </label>
+          <label>Kaldıraç (x)
+            <input id="trade-lev" class="control-input" type="number" min="1" max="125" step="1" value="${levNum}" />
+          </label>
+        </div>
+      `;
+      document.getElementById('trade-confirm').onclick = () => {
+        const amount = parseFloat(document.getElementById('trade-amount').value) || 100;
+        const lev = parseInt(document.getElementById('trade-lev').value, 10) || levNum;
+        openPosWithParams(o, amount, lev);
+        closeModal('trade');
+      };
+      showModal('trade');
+    }
 
-        function renderPos() {
-            const open = positions.filter(p => p.status === 'open');
-            const closed = positions.filter(p => p.status === 'closed').slice(-5);
-            let h = `<p style="color:#94a3b8">Aktif: ${open.length}</p>`;
-            open.forEach(p => {
-                h += `<div class="position-card" style="display:flex; justify-content:space-between">
-                    <span style="color:#fff">${p.name} ${p.direction} ${p.leverage}</span>
-                    <button class="close-btn" onclick="closePos(${p.id}, ${p.entryPrice})">Kapat</button>
-                </div>`;
-            });
-            if (closed.length > 0) {
-                h += '<p style="color:#94a3b8; margin-top:15px">Son Kapatılan:</p>';
-                closed.forEach(p => {
-                    h += `<p class="${p.pnl > 0 ? 'positive' : 'negative'}">${p.symbol}: ${p.pnl > 0 ? '+' : ''}$${p.pnl.toFixed(2)}</p>`;
-                });
-            }
-            document.getElementById('positions').innerHTML = h;
-        }
+    function openPosWithParams(o, amount, lev) {
+      const pair = normalizeToUSDTPair(o.symbol);
+      const latest = state.latestByPair[pair] ?? (o.entry_price || o.current_price || 0);
+      const pos = {
+        id: Date.now(),
+        pair,
+        symbol: o.symbol,
+        name: o.name,
+        direction: o.direction,
+        leverage: lev + 'x',
+        entryPrice: Number(latest) || Number(o.entry_price) || 0,
+        takeProfit: o.take_profit,
+        stopLoss: o.stop_loss,
+        amount: Number(amount) || 100,
+        status: 'open'
+      };
+      positions.push(pos);
+      localStorage.setItem('lp_pos', JSON.stringify(positions));
+      state.neededPairs.add(pair);
+      renderPositions();
+      alert(`✅ ${o.symbol} ${o.direction} açıldı!`);
+    }
 
-        window.addEventListener('load', () => loadAnalysis());
-    </script>
+    function closePos(id) {
+      const p = positions.find(x => x.id === id);
+      if (!p) return;
+      const pair = p.pair || normalizeToUSDTPair(p.symbol);
+      const price = state.latestByPair[pair] ?? p.entryPrice;
+      const lev = parseInt(String(p.leverage).replace(/[^0-9]/g,'')) || 1;
+      const chg = p.direction === 'Long' ? (price - p.entryPrice) / p.entryPrice : (p.entryPrice - price) / p.entryPrice;
+      const pnl = p.amount * chg * lev;
+      p.status = 'closed';
+      p.pnl = pnl;
+      localStorage.setItem('lp_pos', JSON.stringify(positions));
+      renderPositions();
+      alert(`${p.pnl > 0 ? '🎉' : '😔'} P&L: ${p.pnl > 0 ? '+' : ''}$${p.pnl.toFixed(2)}`);
+    }
+
+    function clearClosed() {
+      positions = positions.filter(p => p.status !== 'closed');
+      localStorage.setItem('lp_pos', JSON.stringify(positions));
+      renderPositions();
+    }
+
+    async function openCoinModal(pair, name, symbol) {
+      const body = document.getElementById('coin-body');
+      body.innerHTML = '<div class="loading">Yükleniyor...</div>';
+      showModal('coin');
+      try {
+        const [tRes, kRes] = await Promise.all([
+          fetch(BINANCE_REST_24H + pair),
+          fetch(BINANCE_REST_KLINES + pair)
+        ]);
+        const t = await tRes.json();
+        const klines = await kRes.json();
+        const prices = klines.map(k => Number(k[4]));
+        body.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div style="font-weight:800;">${name} <span style="color:var(--text-secondary)">(${symbol})</span></div>
+            <div>$${Number(t.lastPrice || prices.at(-1)).toFixed(4)}</div>
+          </div>
+          <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin:10px 0;">
+            <div class="summary-card"><div class="label">24s Yüksek</div><div class="value" style="color:var(--green)">$${Number(t.highPrice).toFixed(4)}</div></div>
+            <div class="summary-card"><div class="label">24s Düşük</div><div class="value" style="color:var(--red)">$${Number(t.lowPrice).toFixed(4)}</div></div>
+            <div class="summary-card"><div class="label">Hacim (USDT)</div><div class="value">${Number(t.quoteVolume).toFixed(0)}</div></div>
+          </div>
+          <svg id="sparkline" class="sparkline"></svg>
+        `;
+        drawSparkline('sparkline', prices);
+      } catch (e) {
+        body.innerHTML = '<div class="negative">Detaylar yüklenemedi.</div>';
+      }
+    }
+
+    function drawSparkline(elId, values) {
+      const el = document.getElementById(elId);
+      const w = el.clientWidth || 600; const h = 80; el.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      const min = Math.min(...values); const max = Math.max(...values);
+      const norm = values.map((v,i) => {
+        const x = (i / (values.length - 1)) * (w - 4) + 2;
+        const y = h - ((v - min) / (max - min || 1)) * (h - 4) - 2;
+        return [x,y];
+      });
+      const d = norm.map((p,i) => (i===0?`M${p[0]},${p[1]}`:`L${p[0]},${p[1]}`)).join(' ');
+      el.innerHTML = `<path d="${d}" fill="none" stroke="${values.at(-1) >= values[0] ? 'var(--green)' : 'var(--red)'}" stroke-width="2"/>`;
+    }
+
+    function showModal(kind) {
+      const bd = document.getElementById(kind+'-backdrop');
+      const m = document.getElementById(kind+'-modal');
+      if (bd) bd.style.display = 'flex';
+      if (m) m.classList.remove('hidden');
+    }
+    function closeModal(kind) {
+      const bd = document.getElementById(kind+'-backdrop');
+      const m = document.getElementById(kind+'-modal');
+      if (bd) bd.style.display = 'none';
+      if (m) m.classList.add('hidden');
+    }
+
+    window.addEventListener('load', () => loadAnalysis());
+  </script>
 </body>
 </html>
